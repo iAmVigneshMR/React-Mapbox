@@ -11,7 +11,7 @@ function App() {
   // var circle = turf.circle(center, radius, options);
 
   const mapRef = useRef(null);
-  const mapboxApiAccessToken = "pk.eyJ1IjoicmFmaWxvczU1NiIsImEiOiJja2hoaHFwZjcwZ3pyMnFwNmY3aHY2eDg4In0.Ai4rUxBMjwoNzHTIDqmuBA";
+  const mapboxApiAccessToken = "MAPBOX_ACCESS_KEY";
   const differentStyles = [
     "mapbox://styles/mapbox/streets-v11",
     "mapbox://styles/mapbox/outdoors-v11",
