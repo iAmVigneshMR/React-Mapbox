@@ -51,6 +51,7 @@ const MapLoad1 = () => {
                 }
                 onViewportChange={(nextViewport) => setViewport(nextViewport)}
             >
+                <NavigationControl showCompass={false} />
             </MapGL>
         </div>
     );
