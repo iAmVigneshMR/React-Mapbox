@@ -1,7 +1,8 @@
 // using with shapefile 
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRef, useState } from 'react';
+import axios from 'axios';
 import MapGL, { FullscreenControl, Layer, Marker, NavigationControl, Popup, Source } from "react-map-gl";
 
 const MapLoad3 = () => {
@@ -32,9 +33,51 @@ const MapLoad3 = () => {
         pitch: 0,
         bearing: 0
     });
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        setTimeout(() => {
+
+            DriveTime()
+        }, 5000);
+    }, [viewport])
+
+
+    const DriveTime = (() => {
+        // console.log(mapRef)
+        const mapDrive = mapRef.mapboxgl({
+            container: "mapWrapper",
+            style: 'mapbox://styles/mapbox/streets-v10',
+            center: [-73.985664, 40.748514],
+            zoom: 12
+        });
+        mapDrive.addControl(
+            mapRef.MapboxDirections({
+                accessToken: mapboxApiAccessToken
+            }),
+            'top-left'
+        );
+    })
+
+    useEffect(() => {
+        // console.log(e)
+        const delayDebounceFn = setTimeout(() => {
+            let search_text = searchTerm.trim().toLowerCase();
+            let mapboxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(search_text)}.json?country=us&access_token=${mapboxApiAccessToken}`;
+            axios.get(mapboxUrl)
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => console.log(err));
+        }, 3000)
+
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchTerm])
+
 
     return (
         <div className="App">
+            <input type='text' onChange={(e) => setSearchTerm(e.target.value)} />
             <MapGL
                 ref={mapRef}
                 {...viewport}
@@ -50,6 +93,7 @@ const MapLoad3 = () => {
                 }
                 onViewportChange={(nextViewport) => setViewport(nextViewport)}
             >
+                <div id="mapWrapper"></div>
                 <NavigationControl showCompass={false} />
                 <Source
                     id='terrain-data'
